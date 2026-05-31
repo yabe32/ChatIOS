@@ -1,7 +1,5 @@
-import pg from "pg";
+import { Pool } from "pg";
 import { loadConfig } from "../config.js";
-
-const { Pool } = pg;
 
 export const config = loadConfig();
 

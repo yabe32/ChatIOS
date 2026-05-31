@@ -1,3 +1,4 @@
+import type { PoolClient } from "pg";
 import { config, pool } from "../lib/db.js";
 import { createToken, sha256Hex } from "../lib/crypto.js";
 import { decrementInviteSessionCount, findInviteByCodeHash, findSessionByTokenHash, touchSession } from "../repositories/authRepository.js";
@@ -59,7 +60,7 @@ export async function issueSessionFromAccessCode(params: {
   const tokenHash = hashSessionToken(token);
   const expiresAt = new Date(Date.now() + config.defaultSessionTtlDays * 24 * 60 * 60 * 1000);
 
-  const session = await pool.connect().then(async (client) => {
+  const session = await pool.connect().then(async (client: PoolClient) => {
     try {
       await client.query("begin");
       const lockedInvite = await client.query(
