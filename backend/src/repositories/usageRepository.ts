@@ -10,7 +10,7 @@ export async function reserveUsageSlot(params: {
     return true;
   }
 
-  const { rowCount } = await pool.query(
+  const result = await pool.query(
     `with upserted as (
        insert into usage_counters (subject_type, subject_id, kind, count)
        values ($1, $2, $3, 1)
@@ -23,7 +23,7 @@ export async function reserveUsageSlot(params: {
     [params.subjectType, params.subjectId, params.kind, params.limit]
   );
 
-  return rowCount > 0;
+  return (result.rowCount ?? 0) > 0;
 }
 
 export async function releaseUsageSlot(params: {
